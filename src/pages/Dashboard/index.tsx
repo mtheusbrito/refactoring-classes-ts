@@ -8,31 +8,31 @@ import { FoodsContainer } from './styles';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { FoodInputs } from '../../types';
-
+import { useFoods } from '../../hooks/useFoods';
 
 export function Dashboard() {
  
-  const [foods, setFoods] = useState<FoodInputs[]>([]);
+  // const [foods, setFoods] = useState<FoodInputs[]>([]);
   const [editingFood, setEditingFood ] = useState<FoodInputs>();
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const { foods } = useFoods();
 
+  // async function getItems() {
+  //    setFoods([]);
+  //   try {
+  //     const { data } = await api.get<FoodInputs[]>("/foods");
+  //       setFoods(data);
+  //       console.log('buscaondo arquivos');
+  //       console.log(data)
+  //   } catch (error) {
+  //     alert("Ocorreu um erro ao buscar os items");
+  //   }
+  // }
+  // useEffect(() => {
 
-  async function getItems() {
-     setFoods([]);
-    try {
-      const { data } = await api.get<FoodInputs[]>("/foods");
-        setFoods(data);
-        console.log('buscaondo arquivos');
-        console.log(data)
-    } catch (error) {
-      alert("Ocorreu um erro ao buscar os items");
-    }
-  }
-  useEffect(() => {
-
-    getItems();
-  }, []);
+  //   getItems();
+  // }, []);
 
 
   async function handleDeleteFood(id: number) {
@@ -41,7 +41,7 @@ export function Dashboard() {
     await api.delete(`/foods/${id}`);
 
     const foodsFiltered = updateFoods.filter(food => food.id !== id);
-    setFoods(foodsFiltered);
+    // setFoods(foodsFiltered);
   }
 
   async function handleUpdateFood(food: FoodInputs) {
@@ -57,7 +57,7 @@ export function Dashboard() {
       //     f.id !== foodUpdated.data.id ? f : foodUpdated.data,
       //   );
       // setFoods(foodsUpdated);
-        getItems();
+        // getItems();
         
     } catch (err) {
       console.log(err);
