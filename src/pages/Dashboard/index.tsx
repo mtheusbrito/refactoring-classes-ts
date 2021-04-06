@@ -3,20 +3,21 @@ import api from '../../services/api';
 
 import {ModalAddFood} from '../../components/ModalAddFood';
 import { ModalEditFood } from '../../components/ModalEditFood';
-import { Food } from '../../components/Food';
+import { Food as FoodComponet } from '../../components/Food';
 import { FoodsContainer } from './styles';
 import { useState } from 'react';
-import { useEffect } from 'react';
-import { FoodInputs } from '../../types';
+import { Food, FoodInput  } from '../../types';
+import { useContext } from 'react';
 import { useFoods } from '../../hooks/useFoods';
+// import { useFoods } from '../../hooks/useFoods';
 
 export function Dashboard() {
  
   // const [foods, setFoods] = useState<FoodInputs[]>([]);
-  const [editingFood, setEditingFood ] = useState<FoodInputs>();
+  const [editingFood, setEditingFood ] = useState<Food>();
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const { foods } = useFoods();
+  const {foods, createFood } = useFoods()
 
   // async function getItems() {
   //    setFoods([]);
@@ -44,7 +45,7 @@ export function Dashboard() {
     // setFoods(foodsFiltered);
   }
 
-  async function handleUpdateFood(food: FoodInputs) {
+  async function handleUpdateFood(food: Food) {
 
     // const updateFoods = [...foods];
     try {
@@ -71,23 +72,21 @@ export function Dashboard() {
     setEditModalOpen(!editModalOpen);
   }
 
-  function handleAddFood() {
-
+  function handleAddFood(foodInput : FoodInput) {
+    createFood(foodInput); 
+    toggleModal();
   }
-  function handleEditFood(food: FoodInputs){
+  function handleEditFood(food: Food){
     setEditingFood(food);
     setEditModalOpen(true);
   }
   return (
-    // <p>{foods.map((food)=>(
-    //     <p key={food.id}>{food.id}</p>
-    // ))}</p>
     <>
        <Header handleOpenModal={toggleModal} /> 
       <ModalAddFood
         isOpen={modalOpen}
         setIsOpen={toggleModal}
-        handleAddFood={handleAddFood}
+        handleAddFood={(food: FoodInput)=> handleAddFood(food)}
       />
       <ModalEditFood
         isOpen={editModalOpen}
@@ -99,7 +98,7 @@ export function Dashboard() {
     <FoodsContainer data-testid="foods-list">
         {foods &&
           foods.map(food => (
-             <Food key={food.id}
+             <FoodComponet key={food.id}
                food={food}
                handleDelete={()=>handleDeleteFood(food.id)}
               handleEditFood={()=>handleEditFood(food)}
