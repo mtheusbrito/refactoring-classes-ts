@@ -1,6 +1,5 @@
 import { useRef } from "react";
 import { createContext, ReactNode, useContext,useEffect, useState } from "react";
-
 import api from "../services/api";
 import { Food, FoodInput } from "../types";
 
@@ -65,7 +64,7 @@ export function FoodsProvider({ children }: FoodsProviderProps) {
     {children}
   </FoodsContext.Provider>)
 }
-export function useFoods() {
+export function useFoods(): FoodsContextData{
   const context = useContext(FoodsContext);
   return context;
 }
