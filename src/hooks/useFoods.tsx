@@ -14,14 +14,8 @@ interface FoodsContextData {
     editFood: (food: Food) => Promise<void>;
     changeAvailability: (food: Food) => Promise<void>;
 }
-const initialContext :FoodsContextData = {
-   foods:[], 
-   createFood: async ()=>{},
-   deleteFood: async ()=>{},
-   editFood: async ()=>{},
-   changeAvailability: async () =>{}
-};
-export const FoodsContext = createContext<FoodsContextData>(initialContext)
+
+export const FoodsContext = createContext<FoodsContextData>({} as FoodsContextData)
 
 export function FoodsProvider({ children }: FoodsProviderProps) {
   const [foods, setFoods] = useState<Food[]>([]);

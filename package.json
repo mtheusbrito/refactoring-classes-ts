@@ -42,6 +42,12 @@
       "last 1 safari version"
     ]
   },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
   "devDependencies": {
     "@types/styled-components": "^5.1.9",
     "json-server": "^0.16.3",
