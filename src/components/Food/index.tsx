@@ -1,24 +1,21 @@
 import { FiEdit3, FiTrash } from 'react-icons/fi';
-import { FoodInputs } from '../../types';
+import { Food } from '../../types';
 import { Container } from './styles';
 import api from '../../services/api';
 import { useState } from 'react';
+import { useFoods } from '../../hooks/useFoods';
 
 interface FoodProps{
-  food: FoodInputs;
+  food: Food;
   handleDelete:(id: number)=>void;
-  handleEditFood:(food :FoodInputs)=> void;
+  handleEditFood:(food :Food)=> void;
 }
-export function Food (props : FoodProps){
-  const [ food, setFood ] = useState<FoodInputs>(props.food);
-  
+export function FoodComponent (props : FoodProps){
+  const [ food, setFood ] = useState<Food>(props.food);
+  const {changeAvailability} = useFoods();
 
  async function toggleAvailable(){
-   console.log('alterando')
-    await api.put(`/foods/${food.id}`, {
-      ...food,
-      available: !food.available,
-    });
+    changeAvailability(food);
     setFood({...food, available: !food.available});
   }
 

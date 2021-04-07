@@ -1,4 +1,4 @@
-export interface FoodInputs {
+export interface Food{
   id: number;
   name: string;
   description: string;
@@ -6,3 +6,4 @@ export interface FoodInputs {
   available: boolean;
   image: string;
 }
+export type FoodInput = Omit<Food, 'id'>

@@ -1,31 +1,34 @@
+import { useRef } from "react";
 import { createContext, ReactNode, useContext,useEffect, useState } from "react";
 
 import api from "../services/api";
+import { Food, FoodInput } from "../types";
 
-interface Food {
-  id: number;
-  name: string;
-  description: string;
-  price: string;
-  available: boolean;
-  image: string;
-}
-type FoodInput = Omit<Food, 'id'>;
+
 interface FoodsProviderProps {
   children: ReactNode;
 }
 interface FoodsContextData {
     foods: Food[];
     createFood: (food: FoodInput) => Promise<void>;
-
+    deleteFood: (id: number) => Promise<void>;
+    editFood: (food: Food) => Promise<void>;
+    changeAvailability: (food: Food) => Promise<void>;
 }
-export const FoodsContext = createContext<FoodsContextData>({} as FoodsContextData)
+const initialContext :FoodsContextData = {
+   foods:[], 
+   createFood: async ()=>{},
+   deleteFood: async ()=>{},
+   editFood: async ()=>{},
+   changeAvailability: async () =>{}
+};
+export const FoodsContext = createContext<FoodsContextData>(initialContext)
 
 export function FoodsProvider({ children }: FoodsProviderProps) {
   const [foods, setFoods] = useState<Food[]>([]);
 
-
   async function getFoods() {
+    setFoods([])
     const { data } = await api.get('/foods');
     setFoods(data);
   }
@@ -33,22 +36,32 @@ export function FoodsProvider({ children }: FoodsProviderProps) {
     getFoods();
   }, []);
   async function createFood(foodInput: FoodInput) {
-    const response = await api.post('/foods', foodInput);
-    const { food } = response.data;
-    setFoods([...foods, food]);
+    const response = await api.post('/foods',{
+      ...foodInput,
+      available: true,
+    });
+    if(response){
+      getFoods();
+    }
   }
   async function editFood(food: Food) {
-    
+   await api.put(`/foods/${food?.id}`,food);
+    getFoods();
   }
   async function deleteFood(id: number){
 
+    await api.delete(`/foods/${id}`);
+    getFoods();
   }
 
-  async function changeAvailability(){
-
+  async function changeAvailability(food: Food){
+     await api.put(`/foods/${food.id}`, {
+      ...food,
+      available: !food.available,
+    });
   }
 
-  return (<FoodsContext.Provider value={{ foods, createFood }}>
+  return (<FoodsContext.Provider value={{ foods, createFood, deleteFood, editFood, changeAvailability }}>
     {children}
   </FoodsContext.Provider>)
 }
